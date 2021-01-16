@@ -1,0 +1,2 @@
+class OTPVerificationFailedException(Exception):
+    pass
