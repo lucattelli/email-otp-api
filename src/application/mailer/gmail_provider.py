@@ -1,5 +1,5 @@
-import settings
 import smtplib
+import settings
 
 from domain.otp.entities.email.mailer_abstract import MailerAbstract
 from domain.otp.entities.email.mailer_connection_abstract import (
