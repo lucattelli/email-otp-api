@@ -60,7 +60,7 @@ class TestOTP(TestCase):
         )
         otp.verify(self.otp_code)
         self.hash_stub.compare.assert_called_once_with(
-            string=self.otp_code, hash=self.hashed_otp
+            string=self.otp_code, hashed=self.hashed_otp
         )
 
     def test_verify_WHEN_called_with_correct_otp_AND_status_is_pending_THEN_set_status_to_validated(
