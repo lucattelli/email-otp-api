@@ -15,12 +15,12 @@ class TestOTP(TestCase):
         cls.to = 'user@domain.com'
         cls.otp_code = '123456'
         cls.invalid_otp_code = '999999'
-        cls.hashed_otp = 'hashed-string'
-        cls.invalid_hashed_otp = 'invalid-hashed-string'
+        cls.hashed_otp = str.encode('hashed-string')
+        cls.invalid_hashed_otp = str.encode('invalid-hashed-string')
         cls.hash_stub = mock.Mock(spec=HashAbstract)
         cls.hash_stub.to_hash = mock.Mock(
-            side_effect=lambda string: cls.hashed_otp
-            if string == cls.otp_code
+            side_effect=lambda password: cls.hashed_otp
+            if password == cls.otp_code
             else cls.invalid_hashed_otp
         )
         return super().setUpClass()
@@ -56,7 +56,7 @@ class TestOTP(TestCase):
             status=OTPStatusEnum.PENDING.value,
         )
         otp.verify(self.otp_code)
-        self.hash_stub.to_hash.assert_called_once_with(string=self.otp_code)
+        self.hash_stub.to_hash.assert_called_once_with(password=self.otp_code)
 
     def test_verify_WHEN_called_with_correct_otp_AND_status_is_pending_THEN_set_status_to_validated(
         self,

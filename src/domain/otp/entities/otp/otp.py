@@ -11,7 +11,7 @@ from domain.otp.exceptions.otp_verification_failed_exception import (
 class OTP:
     method: OTPMethodEnum
     to: str
-    hashed_otp: str
+    hashed_otp: bytes
     encoder: HashAbstract
     status: OTPStatusEnum
 
@@ -31,4 +31,4 @@ class OTP:
         return self.hashed_otp != self.__to_hash(otp_code=otp_code)
 
     def __to_hash(self, otp_code: str) -> str:
-        return self.encoder.to_hash(string=otp_code)
+        return self.encoder.to_hash(password=otp_code)

@@ -3,5 +3,5 @@ from abc import ABC
 
 class HashAbstract(ABC):
     @staticmethod
-    def to_hash(string: str) -> str:
+    def to_hash(password: str) -> bytes:
         pass
