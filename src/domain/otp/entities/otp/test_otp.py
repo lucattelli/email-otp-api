@@ -15,13 +15,18 @@ class TestOTP(TestCase):
         cls.to = 'user@domain.com'
         cls.otp_code = '123456'
         cls.invalid_otp_code = '999999'
-        cls.hashed_otp = str.encode('hashed-string')
+        cls.hashed_otp = str.encode(cls.otp_code)
         cls.invalid_hashed_otp = str.encode('invalid-hashed-string')
         cls.hash_stub = mock.Mock(spec=HashAbstract)
         cls.hash_stub.to_hash = mock.Mock(
             side_effect=lambda password: cls.hashed_otp
             if password == cls.otp_code
             else cls.invalid_hashed_otp
+        )
+        cls.hash_stub.compare = mock.Mock(
+            side_effect=lambda string, hash: True
+            if str.encode(string) == hash
+            else False
         )
         return super().setUpClass()
 
@@ -45,7 +50,7 @@ class TestOTP(TestCase):
 
         self.assertDictEqual(expected_otp_dict, actual_otp_dict)
 
-    def test_verify_WHEN_called_AND_status_is_pending_THEN_calls_encoder_to_hash_with_otp_code(
+    def test_verify_WHEN_called_AND_status_is_pending_THEN_calls_encoder_compare_with_otp_code_and_hashed_otp(
         self,
     ):
         otp = OTP(
@@ -56,7 +61,9 @@ class TestOTP(TestCase):
             status=OTPStatusEnum.PENDING.value,
         )
         otp.verify(self.otp_code)
-        self.hash_stub.to_hash.assert_called_once_with(password=self.otp_code)
+        self.hash_stub.compare.assert_called_once_with(
+            string=self.otp_code, hash=self.hashed_otp
+        )
 
     def test_verify_WHEN_called_with_correct_otp_AND_status_is_pending_THEN_set_status_to_validated(
         self,
