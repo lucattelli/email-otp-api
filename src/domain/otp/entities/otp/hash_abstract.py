@@ -7,5 +7,5 @@ class HashAbstract(ABC):
         pass
 
     @staticmethod
-    def compare(string: str, hash: bytes) -> bool:
+    def compare(string: str, hashed: bytes) -> bool:
         pass

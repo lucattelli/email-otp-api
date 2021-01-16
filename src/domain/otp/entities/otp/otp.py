@@ -28,7 +28,7 @@ class OTP:
         return self.status != OTPStatusEnum.PENDING.value
 
     def __incorrect_otp(self, otp_code: str) -> bool:
-        match = self.encoder.compare(string=otp_code, hash=self.hashed_otp)
+        match = self.encoder.compare(string=otp_code, hashed=self.hashed_otp)
         return not match
 
     def __to_hash(self, otp_code: str) -> str:

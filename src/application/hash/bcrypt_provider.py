@@ -8,5 +8,5 @@ class BCryptProvider(HashAbstract):
         return bcrypt.hashpw(str.encode(password), bcrypt.gensalt())
 
     @staticmethod
-    def compare(string: str, hash: bytes) -> bool:
+    def compare(string: str, hashed: bytes) -> bool:
         return bcrypt.checkpw(password=str.encode(string), hashed_password=hash)
