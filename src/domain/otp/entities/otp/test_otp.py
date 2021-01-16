@@ -24,9 +24,7 @@ class TestOTP(TestCase):
             else cls.invalid_hashed_otp
         )
         cls.hash_stub.compare = mock.Mock(
-            side_effect=lambda string, hash: True
-            if str.encode(string) == hash
-            else False
+            side_effect=lambda string, hashed: str.encode(string) == hashed
         )
         return super().setUpClass()
 
