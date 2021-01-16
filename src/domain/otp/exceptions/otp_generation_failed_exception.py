@@ -1,0 +1,2 @@
+class OTPGenerationFailedException(Exception):
+    pass
