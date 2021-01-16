@@ -48,7 +48,7 @@ class TestOTP(TestCase):
 
         self.assertDictEqual(expected_otp_dict, actual_otp_dict)
 
-    def test_verify_WHEN_called_AND_status_is_pending_THEN_calls_encoder_compare_with_otp_code_and_hashed_otp(
+    def test_verify_WHEN_called_AND_status_is_pending_THEN_calls_encoder_compare(
         self,
     ):
         otp = OTP(
