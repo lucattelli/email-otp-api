@@ -1,8 +1,10 @@
 import settings
 import smtplib
 
-from domain.otp.entities.mailer_abstract import MailerAbstract
-from domain.otp.entities.mailer_connection_abstract import MailerConnectionAbstract
+from domain.otp.entities.email.mailer_abstract import MailerAbstract
+from domain.otp.entities.email.mailer_connection_abstract import (
+    MailerConnectionAbstract,
+)
 
 
 class GMailConnection(MailerConnectionAbstract):
