@@ -20,7 +20,7 @@ class VerifyOTP:
             otp = self.repository.get(to=self.to)
             otp.verify(otp_code=self.otp_code)
             if otp.status == OTPStatusEnum.VALIDATED.value:
-                self.repository.delete(otp.to)
+                self.repository.delete(to=otp.to)
             return {'status': otp.status}
         except (OTPDoesNotExistException, OTPVerificationFailedException) as e:
             return {'status': f'Failed to verify OTP: {e}'}
