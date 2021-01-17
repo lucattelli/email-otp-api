@@ -6,6 +6,9 @@ from domain.otp.enums.otp_status_enum import OTPStatusEnum
 from domain.otp.exceptions.otp_verification_failed_exception import (
     OTPVerificationFailedException,
 )
+from domain.otp.exceptions.otp_generation_failed_exception import (
+    OTPGenerationFailedException,
+)
 
 
 class TestOTP(TestCase):
@@ -32,26 +35,24 @@ class TestOTP(TestCase):
         expected_otp_dict = {
             'method': self.otp_method,
             'to': self.to,
-            'hashed_otp': self.hashed_otp,
             'encoder': self.hash_stub,
             'status': OTPStatusEnum.PENDING.value,
+            'hashed_otp': self.hashed_otp,
             'ttl': 60,
         }
 
         otp = OTP(
             method=self.otp_method,
             to=self.to,
-            hashed_otp=self.hashed_otp,
             encoder=self.hash_stub,
             status=OTPStatusEnum.PENDING.value,
+            hashed_otp=self.hashed_otp,
         )
         actual_otp_dict = otp.__dict__
 
         self.assertDictEqual(expected_otp_dict, actual_otp_dict)
 
-    def test_verify_WHEN_called_AND_status_is_pending_THEN_calls_encoder_compare(
-        self,
-    ):
+    def test_verify_WHEN_called_AND_status_is_pending_THEN_calls_encoder_compare(self):
         otp = OTP(
             method=self.otp_method,
             to=self.to,
@@ -104,3 +105,94 @@ class TestOTP(TestCase):
         )
         with self.assertRaises(OTPVerificationFailedException):
             otp.verify(self.invalid_otp_code)
+
+    def test_generate_otp_WHEN_called_AND_hashed_otp_already_exists_THEN_raise_exception(
+        self,
+    ):
+        otp = OTP(
+            method=self.otp_method,
+            to=self.to,
+            hashed_otp=self.hashed_otp,
+            encoder=self.hash_stub,
+            status=OTPStatusEnum.PENDING.value,
+        )
+        with self.assertRaises(OTPGenerationFailedException):
+            otp.generate_otp()
+
+    @mock.patch('random.randint')
+    def test_generate_otp_WHEN_called_AND_hashed_otp_is_none_THEN_calls_randint(
+        self, randint_mock
+    ):
+        randint_mock.return_value = self.otp_code
+
+        expected_call_arguments = (0, 999999)
+
+        otp = OTP(
+            method=self.otp_method,
+            to=self.to,
+            encoder=self.hash_stub,
+            status=OTPStatusEnum.PENDING.value,
+        )
+
+        otp.generate_otp()
+
+        actual_call_arguments = randint_mock.call_args[0]
+
+        self.assertEqual(expected_call_arguments, actual_call_arguments)
+
+    @mock.patch('random.randint')
+    def test_generate_otp_WHEN_called_AND_hashed_otp_is_none_THEN_calls_encoder_to_hash(
+        self, randint_mock
+    ):
+        randint_mock.return_value = self.otp_code
+
+        otp = OTP(
+            method=self.otp_method,
+            to=self.to,
+            encoder=self.hash_stub,
+            status=OTPStatusEnum.PENDING.value,
+        )
+
+        otp.generate_otp()
+
+        self.hash_stub.to_hash.assert_called_once_with(password=self.otp_code)
+
+    @mock.patch('random.randint')
+    def test_generate_otp_WHEN_called_AND_hashed_otp_is_none_THEN_returns_otp_code(
+        self, randint_mock
+    ):
+        randint_mock.return_value = self.otp_code
+
+        expected_otp_code = self.otp_code
+
+        otp = OTP(
+            method=self.otp_method,
+            to=self.to,
+            encoder=self.hash_stub,
+            status=OTPStatusEnum.PENDING.value,
+        )
+
+        actual_otp_code = otp.generate_otp()
+
+        self.assertEqual(expected_otp_code, actual_otp_code)
+
+    @mock.patch('random.randint')
+    def test_generate_otp_WHEN_called_AND_hashed_otp_is_none_THEN_set_hashed_otp(
+        self, randint_mock
+    ):
+        randint_mock.return_value = self.otp_code
+
+        expected_hashed_code = self.hashed_otp
+
+        otp = OTP(
+            method=self.otp_method,
+            to=self.to,
+            encoder=self.hash_stub,
+            status=OTPStatusEnum.PENDING.value,
+        )
+
+        otp.generate_otp()
+
+        actual_hashed_code = otp.hashed_otp
+
+        self.assertEqual(expected_hashed_code, actual_hashed_code)

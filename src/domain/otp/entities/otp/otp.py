@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from random import randint
+import random
 from typing import Optional
 from domain.otp.entities.otp.hash_abstract import HashAbstract
 from domain.otp.enums.otp_method_enum import OTPMethodEnum
@@ -45,4 +45,4 @@ class OTP:
         return not match
 
     def __generate_otp_code(self) -> str:
-        return str(randint(0, 999999)).zfill(6)
+        return str(random.randint(0, 999999)).zfill(6)
