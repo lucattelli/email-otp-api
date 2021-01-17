@@ -35,6 +35,7 @@ class TestOTP(TestCase):
             'hashed_otp': self.hashed_otp,
             'encoder': self.hash_stub,
             'status': OTPStatusEnum.PENDING.value,
+            'ttl': 60,
         }
 
         otp = OTP(
@@ -89,28 +90,6 @@ class TestOTP(TestCase):
             hashed_otp=self.hashed_otp,
             encoder=self.hash_stub,
             status=OTPStatusEnum.PENDING.value,
-        )
-        with self.assertRaises(OTPVerificationFailedException):
-            otp.verify(self.invalid_otp_code)
-
-    def test_verify_WHEN_called_AND_status_is_expired_THEN_raise_exception(self):
-        otp = OTP(
-            method=self.otp_method,
-            to=self.to,
-            hashed_otp=self.hashed_otp,
-            encoder=self.hash_stub,
-            status=OTPStatusEnum.EXPIRED.value,
-        )
-        with self.assertRaises(OTPVerificationFailedException):
-            otp.verify(self.invalid_otp_code)
-
-    def test_verify_WHEN_called_AND_status_is_invalid_THEN_raise_exception(self):
-        otp = OTP(
-            method=self.otp_method,
-            to=self.to,
-            hashed_otp=self.hashed_otp,
-            encoder=self.hash_stub,
-            status=OTPStatusEnum.INVALID.value,
         )
         with self.assertRaises(OTPVerificationFailedException):
             otp.verify(self.invalid_otp_code)

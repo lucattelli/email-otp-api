@@ -19,6 +19,7 @@ class OTP:
     encoder: HashAbstract
     status: OTPStatusEnum
     hashed_otp: Optional[bytes] = None
+    ttl: int = 60
 
     def verify(self, otp_code: str) -> None:
         if self.__invalid_status_for_verification() or self.__incorrect_otp(
