@@ -1,11 +1,11 @@
-from abc import ABC
+from abc import ABC, abstractstaticmethod
 
 
 class HashAbstract(ABC):
-    @staticmethod
+    @abstractstaticmethod
     def to_hash(password: str) -> bytes:
         pass
 
-    @staticmethod
+    @abstractstaticmethod
     def compare(string: str, hashed: bytes) -> bool:
         pass
