@@ -7,4 +7,4 @@ from domain.otp.entities.email.mailer_connection_abstract import (
 class MailerAbstract(ABC):
     @abstractclassmethod
     def get_instance(cls) -> MailerConnectionAbstract:
-        pass
+        pass  # pragma: no cover

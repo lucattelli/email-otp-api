@@ -6,12 +6,12 @@ from domain.otp.entities.otp.otp import OTP
 class OTPRepositoryAbstract(ABC):
     @abstractmethod
     def save(self, otp: OTP) -> None:
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def get(self, to: str) -> Optional[OTP]:
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def delete(self, to: str) -> None:
-        pass
+        pass  # pragma: no cover
