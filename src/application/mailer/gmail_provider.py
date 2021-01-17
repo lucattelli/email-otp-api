@@ -1,5 +1,5 @@
 import smtplib
-import settings
+from settings import settings
 
 from domain.otp.entities.email.mailer_abstract import MailerAbstract
 from domain.otp.entities.email.mailer_connection_abstract import (
@@ -27,7 +27,7 @@ class GMailConnection(MailerConnectionAbstract):
     def __build_email(
         self, sent_from: str, send_to: str, subject: str, body: str
     ) -> str:
-        return f'From: {sent_from}\nTo: {send_to}\nSubject: {subject}\n{body}'
+        return f'From: {sent_from}\nTo: {send_to}\nSubject: {subject}\n\n{body}'
 
     def send_email(self, to: str, subject: str, body: str) -> None:
         email = self.__build_email(
@@ -43,9 +43,9 @@ class GMailProvider(MailerAbstract):
     def get_instance(cls) -> MailerConnectionAbstract:
         if cls.__connection is None:
             cls.__connection = GMailConnection(
-                gmail_user=settings.GMAIL_USER,
-                gmail_password=settings.GMAIL_PASSWORD,
-                server_url=settings.GMAIL_URL,
-                server_port=settings.GMAIL_PORT,
+                gmail_user=settings.get('GMAIL_USER'),
+                gmail_password=settings.get('GMAIL_PASSWORD'),
+                server_url=settings.get('GMAIL_URL'),
+                server_port=settings.get('GMAIL_PORT'),
             )
         return cls.__connection
