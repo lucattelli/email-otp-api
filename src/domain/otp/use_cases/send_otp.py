@@ -3,6 +3,7 @@ from domain.otp.entities.otp.hash_abstract import HashAbstract
 from domain.otp.entities.email.email import Email
 from domain.otp.entities.otp.otp import OTP
 from domain.otp.entities.otp.otp_repository_abstract import OTPRepositoryAbstract
+from domain.otp.enums.otp_method_enum import OTPMethodEnum
 from domain.otp.enums.otp_status_enum import OTPStatusEnum
 
 
@@ -24,7 +25,12 @@ class SendOTP:
         email.send()
 
     def __build_otp(self, encoder: HashAbstract, to: str) -> OTP:
-        return OTP(to=to, encoder=encoder, status=OTPStatusEnum.PENDING.value)
+        return OTP(
+            method=OTPMethodEnum.EMAIL.value,
+            to=to,
+            encoder=encoder,
+            status=OTPStatusEnum.PENDING.value,
+        )
 
     def __build_email(self, otp_code: str) -> Email:
         subject = 'Your OTP is here!'
