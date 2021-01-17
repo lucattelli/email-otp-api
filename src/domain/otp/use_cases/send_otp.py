@@ -6,9 +6,13 @@ from domain.otp.entities.otp.otp import OTP
 from domain.otp.entities.otp.otp_repository_abstract import OTPRepositoryAbstract
 from domain.otp.enums.otp_method_enum import OTPMethodEnum
 from domain.otp.enums.otp_status_enum import OTPStatusEnum
+from domain.otp.exceptions.email_server_connection_failed_exception import (
+    EmailServerConnectionFailedException,
+)
 from domain.otp.exceptions.otp_generation_failed_exception import (
     OTPGenerationFailedException,
 )
+from domain.otp.exceptions.email_send_failed_exception import EmailSendFailedException
 
 
 class SendOTP:
@@ -28,9 +32,13 @@ class SendOTP:
             otp_code = self.otp.generate_otp()
             email = self.__build_email(otp_code=otp_code)
             email.send()
-            self.repository.save(self.otp)
+            self.repository.save(otp=self.otp)
             return {'status': self.otp.status, 'ttl_seconds': self.otp.ttl}
-        except OTPGenerationFailedException as e:
+        except (
+            OTPGenerationFailedException,
+            EmailServerConnectionFailedException,
+            EmailSendFailedException,
+        ) as e:
             return {'status': f'failed: {e}'}
 
     def __build_otp(self, encoder: HashAbstract, to: str) -> OTP:
