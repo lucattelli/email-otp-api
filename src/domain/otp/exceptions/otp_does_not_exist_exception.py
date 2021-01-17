@@ -1,0 +1,2 @@
+class OTPDoesNotExistException(Exception):
+    pass

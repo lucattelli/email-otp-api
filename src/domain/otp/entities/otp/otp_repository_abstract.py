@@ -11,3 +11,7 @@ class OTPRepositoryAbstract(ABC):
     @abstractmethod
     def get(self, to: str) -> Optional[OTP]:
         pass
+
+    @abstractmethod
+    def delete(self, to: str) -> None:
+        pass
