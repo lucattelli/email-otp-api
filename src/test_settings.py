@@ -11,7 +11,7 @@ class TestSettings(TestCase):
     @mock.patch('dotenv.load_dotenv')
     @mock.patch('os.getenv')
     def test_load_settings_WHEN_called_THEN_calls_load_dotenv(
-        self, getenv_mock, load_dotenv_mock
+        self, _, load_dotenv_mock
     ):
         settings.load_settings()
         self.assertTrue(load_dotenv_mock.called)
@@ -19,7 +19,7 @@ class TestSettings(TestCase):
     @mock.patch('dotenv.load_dotenv')
     @mock.patch('os.getenv')
     def test_load_settings_WHEN_called_THEN_calls_os_getenv_for_all_settings(
-        self, getenv_mock, load_dotenv_mock
+        self, getenv_mock, _
     ):
         expected_call_args_list = [
             ('GMAIL_USER', ''),
@@ -44,7 +44,7 @@ class TestSettings(TestCase):
         },
     )
     @mock.patch('dotenv.load_dotenv')
-    def test_load_settings_WHEN_called_THEN_set_settings_values(self, load_dotenv_mock):
+    def test_load_settings_WHEN_called_THEN_set_settings_values(self, _):
         expected_settings_dict = {
             'GMAIL_USER': 'user@domain.com',
             'GMAIL_PASSWORD': 'password',
